@@ -19,58 +19,58 @@
 // ==/UserScript==
 
 function SysMessageHide(version) {
-	"use strict";
-	this.version = version;
-	this.name = 'InstaSynchP SysMessage Hide';
-	this.settings = [{
-		'label': 'Hide',
-		'id': 'sysmessage-hide',
-		'type': 'checkbox',
-		'default': true,
-		'section': ['Chat', 'System Messages']
-	}, {
-		'label': 'Hide Delay(ms)',
-		'id': 'sysmessage-hide-timeout',
-		'type': 'int',
-		'min': 0,
-		'max': 100000,
-		'default': 15000,
-		'size': 8,
-		'section': ['Chat', 'System Messages']
-	}];
-	this.hideTimeoutIds = [];
+  "use strict";
+  this.version = version;
+  this.name = 'InstaSynchP SysMessage Hide';
+  this.settings = [{
+    'label': 'Hide',
+    'id': 'sysmessage-hide',
+    'type': 'checkbox',
+    'default': true,
+    'section': ['Chat', 'System Messages']
+  }, {
+    'label': 'Hide Delay(ms)',
+    'id': 'sysmessage-hide-timeout',
+    'type': 'int',
+    'min': 0,
+    'max': 100000,
+    'default': 15000,
+    'size': 8,
+    'section': ['Chat', 'System Messages']
+  }];
+  this.hideTimeoutIds = [];
 }
 
-SysMessageHide.prototype.executeOnce = function() {
-	"use strict";
-	var th = this;
+SysMessageHide.prototype.executeOnce = function () {
+  "use strict";
+  var th = this;
 
-	events.on(th, 'SettingChange[sysmessage-hide]', function(oldVal, newVal) {
-		$('#chat-messages .system').parent()[newVal ? 'hide' : 'show']();
-		//stop all the outstanding timeouts
-		for (var i = 0, len = th.hideTimeoutIds.length; i < len; i += 1) {
-			clearTimeout(th.hideTimeoutIds[i]);
-		}
-		th.hideTimeoutIds = [];
-		//scroll to the bottom
-		$('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
-	});
+  events.on(th, 'SettingChange[sysmessage-hide]', function (oldVal, newVal) {
+    $('#chat-messages .system').parent()[newVal ? 'hide' : 'show']();
+    //stop all the outstanding timeouts
+    for (var i = 0, len = th.hideTimeoutIds.length; i < len; i += 1) {
+      clearTimeout(th.hideTimeoutIds[i]);
+    }
+    th.hideTimeoutIds = [];
+    //scroll to the bottom
+    $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+  });
 
-	events.on(th, 'AddMessage', function(user) {
-		if (user.username !== '' || !gmc.get('sysmessage-hide')) {
-			return;
-		}
-		var lastMessage, timeoutId;
+  events.on(th, 'AddMessage', function (user) {
+    if (user.username !== '' || !gmc.get('sysmessage-hide')) {
+      return;
+    }
+    var lastMessage, timeoutId;
 
-		lastMessage = $('#chat-messages > :last-child');
+    lastMessage = $('#chat-messages > :last-child');
 
-		timeoutId = setTimeout(function() {
-			lastMessage.hide();
-			th.hideTimeoutIds.shift();
-		}, gmc.get('sysmessage-hide-timeout'));
+    timeoutId = setTimeout(function () {
+      lastMessage.hide();
+      th.hideTimeoutIds.shift();
+    }, gmc.get('sysmessage-hide-timeout'));
 
-		th.hideTimeoutIds.push(timeoutId);
-	});
+    th.hideTimeoutIds.push(timeoutId);
+  });
 };
 
 /*
