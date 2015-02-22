@@ -3,19 +3,17 @@
 // @namespace   InstaSynchP
 // @description Hides system messages after a short time to reduce spam in the chat
 
-// @version     1
+// @version     1.0.1
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-SysMessage-Hide
 // @license     MIT
 
-// @include     http://*.instasynch.com/*
-// @include     http://instasynch.com/*
-// @include     http://*.instasync.com/*
-// @include     http://instasync.com/*
+// @include     *://instasync.com/r/*
+// @include     *://*.instasync.com/r/*
 // @grant       none
 // @run-at      document-start
 
-// @require     https://greasyfork.org/scripts/5647-instasynchp-library/code/InstaSynchP%20Library.js?version=22833
+// @require     https://greasyfork.org/scripts/5647-instasynchp-library/code/InstaSynchP%20Library.js?version=37716
 // ==/UserScript==
 
 function SysMessageHide(version) {
@@ -46,23 +44,23 @@ SysMessageHide.prototype.executeOnce = function () {
   var th = this;
 
   events.on(th, 'SettingChange[sysmessage-hide]', function (oldVal, newVal) {
-    $('#chat-messages .system').parent()[newVal ? 'hide' : 'show']();
+    $('#chat_messages .text-info').parent()[newVal ? 'hide' : 'show']();
     //stop all the outstanding timeouts
     for (var i = 0, len = th.hideTimeoutIds.length; i < len; i += 1) {
       clearTimeout(th.hideTimeoutIds[i]);
     }
     th.hideTimeoutIds = [];
     //scroll to the bottom
-    $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+    $('#chat_messages').scrollTop($('#chat_messages')[0].scrollHeight);
   });
 
-  events.on(th, 'AddMessage', function (user) {
-    if (user.username !== '' || !gmc.get('sysmessage-hide')) {
+  events.on(th, 'AddMessage', function (ignore1, ignore2, extraStyles) {
+    if (extraStyles !== 'text-info' || !gmc.get('sysmessage-hide')) {
       return;
     }
     var lastMessage, timeoutId;
 
-    lastMessage = $('#chat-messages > :last-child');
+    lastMessage = $('#chat_messages > :last-child');
 
     timeoutId = setTimeout(function () {
       lastMessage.hide();
@@ -98,4 +96,4 @@ SysMessageHide.prototype.preConnect = function() {
 }*/
 
 window.plugins = window.plugins || {};
-window.plugins.sysMessageHide = new SysMessageHide('1');
+window.plugins.sysMessageHide = new SysMessageHide('1.0.1');
