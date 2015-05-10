@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Hides system messages after a short time to reduce spam in the chat
 
-// @version     1.0.1
+// @version     1.0.2
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-SysMessage-Hide
 // @license     MIT
@@ -21,20 +21,19 @@ function SysMessageHide(version) {
   this.version = version;
   this.name = 'InstaSynchP SysMessage Hide';
   this.settings = [{
-    'label': 'Hide',
-    'id': 'sysmessage-hide',
-    'type': 'checkbox',
+    label: 'Hide system messages after a delay',
+    title: 'Disabling this will show the system messages again',
+    id: 'sysmessage-hide',
+    type: 'checkbox',
     'default': true,
-    'section': ['Chat', 'System Messages']
+    section: ['System Messages']
   }, {
-    'label': 'Hide Delay(ms)',
-    'id': 'sysmessage-hide-timeout',
-    'type': 'int',
-    'min': 0,
-    'max': 100000,
+    label: 'Delay to hide the messages in ms',
+    id: 'sysmessage-hide-timeout',
+    type: 'int',
     'default': 15000,
-    'size': 8,
-    'section': ['Chat', 'System Messages']
+    size: 6,
+    section: ['System Messages']
   }];
   this.hideTimeoutIds = [];
 }
@@ -71,29 +70,5 @@ SysMessageHide.prototype.executeOnce = function () {
   });
 };
 
-/*
-button to toggle system messages
-SysMessageHide.prototype.preConnect = function() {
-	"use strict";
-	var th = this;
-  <a style="
-	position: absolute;
-	top: 2px;
-	right: 17px;
-	cursor: pointer;
-	"><img src="http://puu.sh/e1mf9/dd5400a431.png"></a>
-	$('#chat-messages').before(
-		$('<a>').append(
-			$('<img>', {
-				src: 'http://puu.sh/e1mf9/dd5400a431.png'
-			})
-		).css('cursor', 'pointer').css('top', '2px').css('position', 'absolute').css('right', '17px')
-		.click(function() {
-			gmc.set('sysmessage-hide', !gmc.get('sysmessage-hide'));
-			plugins.settings.save();
-		})
-	);
-}*/
-
 window.plugins = window.plugins || {};
-window.plugins.sysMessageHide = new SysMessageHide('1.0.1');
+window.plugins.sysMessageHide = new SysMessageHide('1.0.2');
